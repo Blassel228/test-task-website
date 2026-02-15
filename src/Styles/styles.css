@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+#root {
+  height: 100%;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background-color: rgb(249, 250, 251);
+}
+
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+[data-scroll-locked][data-scroll-locked] {
+  overflow-y: scroll !important;
+  margin-right: 0 !important;
+}
