@@ -6,9 +6,7 @@ interface AuthorizedUserState {
 }
 
 const initialState: AuthorizedUserState = {
-  authorizedUser: {
-    image: { image_data: null },
-  } as User,
+  authorizedUser: {} as User,
 };
 
 const authorizedUserSlice = createSlice({

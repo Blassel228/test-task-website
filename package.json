@@ -21,7 +21,7 @@
     "@rollup/plugin-inject": "^5.0.5",
     "@supabase/supabase-js": "^2.95.3",
     "@tailwindcss/vite": "^4.1.2",
-    "@tanstack/react-query": "^5.69.0",
+    "@tanstack/react-query": "^5.90.21",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",

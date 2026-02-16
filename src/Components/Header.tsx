@@ -1,12 +1,13 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import amazonLogo from "../Assets/amazonLogo.png";
 import SearchBar from "./SearchForm.tsx";
+import {useNavigate} from "react-router-dom";
+import routers from "../Constants/routers.tsx";
 
 const HeaderContainer = styled.header`
   background: linear-gradient(to bottom, #131921, #131921);
   width: 100%;
-  position: fixed;
   top: 0;
   left: 0;
   display: flex;
@@ -31,13 +32,10 @@ const SearchContainer = styled.div`
 `;
 
 const Header = () => {
-  useEffect(() => {
-    const vite_url = import.meta.env.VITE_SUPABASE_URL!;
-    console.log(vite_url)
-  }, [])
+  const navigate = useNavigate();
   return (
     <HeaderContainer>
-      <Logo src={amazonLogo} alt="Amazon Logo" />
+      <Logo src={amazonLogo} alt="Amazon Logo" onClick={() => navigate(routers.home)}/>
       <SearchContainer>
         <SearchBar />
       </SearchContainer>

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import routers from "../Constants/routers.tsx";
 
 const SearchContainer = styled.div`
   display: flex;
@@ -21,7 +23,7 @@ const SearchInput = styled.input`
   height: 10px;
   padding: 8px;
   background: transparent;
-  
+
   &::placeholder {
     color: #999;
   }
@@ -43,7 +45,7 @@ const SearchIcon = styled.svg`
   height: 24px;
   fill: #ff6600; 
   transition: transform 0.2s;
-  
+
   ${SearchButton}:hover & {
     transform: scale(1.1);
   }
@@ -51,12 +53,14 @@ const SearchIcon = styled.svg`
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      console.log('Search:', searchTerm);
-    }
+    if (!searchTerm.trim()) return;
+    const params = new URLSearchParams();
+    params.set('q', searchTerm.trim());
+    navigate(`${routers.catalog}?${params.toString()}`);
   };
 
   return (

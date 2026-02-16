@@ -1,5 +1,9 @@
+const HOME = "/home"
+
 const routers = {
-  home: "/home",
+  home: HOME,
+  catalog: `${HOME}/catalog`,
+  notExisting: "*"
 };
 
 export default routers;
