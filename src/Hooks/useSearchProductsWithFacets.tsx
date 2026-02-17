@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { searchProductsWithFacets } from "../Lib/product.tsx";
+import {getTopBrands, getTopCategories, searchProducts, searchProductsWithFacets} from "../Lib/product.tsx";
 import {Product} from "../Types/Product.tsx";
 import {BrandFacet, CategoryFacet} from "../Types/Facets.tsx";
 
