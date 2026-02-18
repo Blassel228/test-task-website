@@ -37,20 +37,12 @@ const Brand = styled.div`
   margin-bottom: 4px;
 `;
 
-const Categories = styled.div`
-  font-size: 12px;
-  color: #888;
-`;
-
 const ProductCard = ({ product }: { product: Product }) => {
   return (
     <CardContainer>
       <ProductImage src={product.image || "/placeholder.png"} alt={product.name} />
       <ProductName>{product.name}</ProductName>
       <Brand>{product.brand?.name || "No Brand"}</Brand>
-      <Categories>
-        {product.categories?.map((c: any) => c.name).join(", ") || "No Categories"}
-      </Categories>
     </CardContainer>
   );
 };

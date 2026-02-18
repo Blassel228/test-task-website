@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { BrandSection, CategorySection } from "./BrandSection";
+import { BrandSection } from "./BrandSection";
 import { TopBrand } from "../Types/Brand";
 import { TopCategory } from "../Types/Catagory";
 import { BrandCount } from "../Types/Brand";
 import { CategoryCount } from "../Types/Catagory";
+import {CategorySection} from "./CategorySection.tsx";
 
 interface Props {
   brands: TopBrand[];
