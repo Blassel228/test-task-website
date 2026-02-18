@@ -7,11 +7,10 @@ import {
   useGetCategoryCounts,
   useGetBrandsCounts,
 } from "../Hooks/useFacets.tsx";
-import ProductCard from "../Components/ProductCard";
-import Loading from "../Components/Loading";
 import Row from "../Components/Row";
 import FacetsSidebar from "../Components/FacetsSidebar.tsx";
 import styled from "styled-components";
+import ProductsList from "../Components/ProductsList.tsx";
 
 const CatalogContainer = styled.div`
   display: grid;
@@ -99,13 +98,7 @@ const CatalogPage = () => {
         onToggleCategory={toggleCategory}
       />
 
-       <CatalogContainer>
-        { isGlobalLoading &&  <Loading /> }
-        {  isGlobalError && <div>Error during products loading. Try again later.</div> }
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </CatalogContainer>
+       <ProductsList products={products} isLoading={isGlobalLoading} isError={isGlobalError} />
     </Row>
   );
 };
