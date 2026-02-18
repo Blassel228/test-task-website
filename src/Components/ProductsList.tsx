@@ -3,6 +3,15 @@ import styled from "styled-components";
 import ProductCard from "./ProductCard";
 import Loading from "./Loading";
 
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;  
+  align-items: center;      
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+`
+
 const CatalogContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -41,11 +50,11 @@ const ProductsList: React.FC<Props> = ({
   isLoading,
   isError,
 }) => {
-  if (isLoading) {
+  if (isLoading){
     return (
-      <CatalogContainer>
+      <LoadingContainer>
         <Loading />
-      </CatalogContainer>
+      </LoadingContainer>
     );
   }
 
