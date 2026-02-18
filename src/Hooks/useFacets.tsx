@@ -8,7 +8,6 @@ import {
   getCategoriesCounts,
   getTopCategories,
 } from "../Api/productsCategories";
-import { Product } from "../Types/Product";
 import {BrandCount, TopBrand} from "../Types/Brand";
 import { CategoryCount, TopCategory } from "../Types/Catagory";
 import {
@@ -16,17 +15,24 @@ import {
   GetCategoryCountsRequest,
   SearchParamsRequest,
 } from "../Types/Requests";
+import {SearchProductsResponse} from "../Types/Responses.tsx";
 
 export const useSearchProducts = (params: SearchParamsRequest) => {
-  const { data, isLoading, isError } = useQuery<Product[]>({
+  const { data, isLoading, isError } = useQuery<SearchProductsResponse>({
     queryKey: ["products", params],
-    queryFn: () => searchProducts(params),
-    placeholderData: [],
-    staleTime: 1000 * 60,
+    queryFn: async () => await searchProducts(params),
   });
+  const total = data?.total || 100;
+  const products = data?.products || data || [];
 
-  return { products: data || [], isLoading, isError };
+  return {
+    products,
+    total,
+    isLoading,
+    isError,
+  };
 };
+
 
 export const useTopBrands = (q: string) => {
   const { data, isLoading, isError } = useQuery<TopBrand[]>({
