@@ -1,11 +1,17 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
+import {
+  useSearchProducts,
+  useTopBrands,
+  useTopCategories,
+  useGetCategoryCounts,
+  useGetBrandsCounts,
+} from "../Hooks/useFacets.tsx";
 import ProductCard from "../Components/ProductCard";
-import Loading from "../Components/Loading.tsx";
-import {useSearchProductsWithFacets} from "../Hooks/useSearchProductsWithFacets.tsx";
-import Row from "../Components/Row.tsx";
+import Loading from "../Components/Loading";
+import Row from "../Components/Row";
 import FacetsSidebar from "../Components/FacetsSidebar.tsx";
+import styled from "styled-components";
 
 const CatalogContainer = styled.div`
   display: grid;
@@ -16,83 +22,86 @@ const CatalogContainer = styled.div`
   background-color: #f7f7f7;
 `;
 
-const ErrorElement = styled.div`
-  padding: 20px;
-  color: #dc2626;
-  background: #fee2e2;
-  border-radius: 6px;
-  text-align: center;
-`;
-
-const EmptyElement = styled.div`
-  padding: 20px;
-  color: #64748b;
-  background: #f1f5f9;
-  border-radius: 6px;
-  text-align: center;
-`;
-
 const CatalogPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const q = searchParams.get('q') || '';
-  const brandIds = searchParams.get('brandIds')?.split(',').map(Number) || [];
-  const categoryIds = searchParams.get('categoryIds')?.split(',').map(Number) || [];
-  const offset = Number(searchParams.get('offset') || 0);
+  const q = searchParams.get("q") || "";
+  const brandIds = searchParams.get("brandIds")?.split(",").map(Number) || [];
+  const categoryIds = searchParams.get("categoryIds")?.split(",").map(Number) || [];
 
-  const { products, facets, isLoading, isError } = useSearchProductsWithFacets(
-    q,
-    brandIds,
-    categoryIds,
-    100,
-    offset
+  const apiParams = useMemo(
+    () => ({ q, brand_ids: brandIds, category_ids: categoryIds }),
+    [q, brandIds, categoryIds]
   );
 
-  const updateFilters = (newParams: Record<string, string | number | string[]>) => {
-    const params = new URLSearchParams(searchParams);
+  const { topBrands, isLoading: areBrandsLoading } = useTopBrands(q);
+  const { topCategories, isLoading: areCategoriesLoading } = useTopCategories(q);
 
+  const topBrandIds = useMemo(() => topBrands.map((b) => b.brand_id), [topBrands]);
+  const topCategoryIds = useMemo(() => topCategories.map((c) => c.category_id), [topCategories]);
+
+  const brandCountsParams = useMemo(
+    () => ({ q, brand_ids: topBrandIds, category_ids: categoryIds }),
+    [q, topBrandIds, categoryIds]
+  );
+
+  const categoryCountsParams = useMemo(
+    () => ({ q, brand_ids: brandIds, category_ids: topCategoryIds }),
+    [q, brandIds, topCategoryIds]
+  );
+
+  const { products, isLoading: areProductsLoading, isError: isProductsError } = useSearchProducts(apiParams);
+  const { categoryCounts, isLoading: categoryCountsLoading } = useGetCategoryCounts(categoryCountsParams,  { enabled: topCategoryIds.length > 0 } );
+  const { brandsCounts, isLoading: brandCountsLoading } = useGetBrandsCounts(brandCountsParams);
+
+  const isGlobalLoading = areProductsLoading || categoryCountsLoading || brandCountsLoading || areBrandsLoading || areCategoriesLoading;
+  
+  const isGlobalError = isProductsError; 
+
+  const updateFilters = (newParams: Record<string, any>) => {
+    const params = new URLSearchParams(searchParams);
     Object.entries(newParams).forEach(([key, value]) => {
       if (Array.isArray(value)) {
-        value.length > 0 ? params.set(key, value.join(',')) : params.delete(key);
+        value.length > 0 ? params.set(key, value.join(",")) : params.delete(key);
       } else if (value) {
         params.set(key, String(value));
       } else {
         params.delete(key);
       }
     });
-
     setSearchParams(params, { replace: true });
   };
 
   const toggleBrand = (brandId: number) => {
     const newBrands = brandIds.includes(brandId)
-      ? brandIds.filter(id => id !== brandId)
+      ? brandIds.filter((id) => id !== brandId)
       : [...brandIds, brandId];
     updateFilters({ brandIds: newBrands });
   };
 
   const toggleCategory = (categoryId: number) => {
     const newCategories = categoryIds.includes(categoryId)
-      ? categoryIds.filter(id => id !== categoryId)
+      ? categoryIds.filter((id) => id !== categoryId)
       : [...categoryIds, categoryId];
     updateFilters({ categoryIds: newCategories });
   };
 
-
-  if (isLoading) return <Loading />;
-  if (isError) return <ErrorElement>Error during products loading. Try again later.</ErrorElement>;
-  if (!products.length) return <EmptyElement>No products found.</EmptyElement>;
   return (
     <Row>
       <FacetsSidebar
-        brands={facets?.brands || []}
-        categories={facets?.categories || []}
+        brands={topBrands}
+        brandCounts={brandsCounts}
+        categories={topCategories}
+        categoryCounts={categoryCounts}
         selectedBrands={brandIds}
         selectedCategories={categoryIds}
         onToggleBrand={toggleBrand}
         onToggleCategory={toggleCategory}
       />
-      <CatalogContainer>
+
+       <CatalogContainer>
+        { isGlobalLoading &&  <Loading /> }
+        {  isGlobalError && <div>Error during products loading. Try again later.</div> }
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

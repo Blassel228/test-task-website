@@ -1,18 +1,25 @@
 import React from "react";
 import styled from "styled-components";
-import { BrandFacet, CategoryFacet } from "../Types/Facets.tsx";
-import { FacetCheckbox } from "./FacetCheckbox";
+import { BrandSection, CategorySection } from "./BrandSection";
+import { TopBrand } from "../Types/Brand";
+import { TopCategory } from "../Types/Catagory";
+import { BrandCount } from "../Types/Brand";
+import { CategoryCount } from "../Types/Catagory";
 
 interface Props {
-  brands: BrandFacet[];
-  categories: CategoryFacet[];
+  brands: TopBrand[];
+  brandCounts: BrandCount[];
+  categories: TopCategory[];
+  categoryCounts: CategoryCount[];
   selectedBrands: number[];
   selectedCategories: number[];
+  isLoadingBrands?: boolean;
+  isLoadingCategories?: boolean;
   onToggleBrand: (id: number) => void;
   onToggleCategory: (id: number) => void;
 }
 
-const SidebarContainer = styled.div`
+const SidebarContainer = styled.aside`
   width: 280px;
   padding: 1.5rem;
   background: #fff;
@@ -22,78 +29,45 @@ const SidebarContainer = styled.div`
   position: sticky;
   top: 60px;
   flex-shrink: 0;
-`;
 
-const Section = styled.div`
-  margin-bottom: 1.8rem;
-  
-  &:last-child {
-    margin-bottom: 0;
+  @media (max-width: 768px) {
+    position: static;
+    height: auto;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #eee;
   }
-`;
-
-const SectionTitle = styled.h3`
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0 0 12px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #f0f0f0;
-  color: #333;
-`;
-
-const EmptyState = styled.div`
-  color: #999;
-  font-size: 0.9rem;
-  padding: 8px 0;
-  font-style: italic;
 `;
 
 const FacetsSidebar: React.FC<Props> = ({
   brands,
+  brandCounts,
   categories,
+  categoryCounts,
   selectedBrands,
   selectedCategories,
+  isLoadingBrands = false,
+  isLoadingCategories = false,
   onToggleBrand,
-  onToggleCategory
+  onToggleCategory,
 }) => {
-  const validBrands = brands.filter(b => b.brand?.name);
-  const validCategories = categories.filter(c => c.category?.name);
-
   return (
-    <SidebarContainer>
-      <Section>
-        <SectionTitle>Brands</SectionTitle>
-        {validBrands.length > 0 ? (
-          validBrands.map(brand => (
-            <FacetCheckbox
-              key={brand.brand_id}
-              label={brand.brand.name}
-              count={brand.count}
-              checked={selectedBrands.includes(brand.brand_id)}
-              onChange={() => onToggleBrand(brand.brand_id)}
-            />
-          ))
-        ) : (
-          <EmptyState>No brands</EmptyState>
-        )}
-      </Section>
+    <SidebarContainer aria-label="Product Filters">
+      <BrandSection
+        brands={brands}
+        brandCounts={brandCounts}
+        selectedBrands={selectedBrands}
+        isLoading={isLoadingBrands}
+        onToggleBrand={onToggleBrand}
+      />
 
-      <Section>
-        <SectionTitle>Catagories</SectionTitle>
-        {validCategories.length > 0 ? (
-          validCategories.map(category => (
-            <FacetCheckbox
-              key={category.category_id}
-              label={category.category.name}
-              count={category.count}
-              checked={selectedCategories.includes(category.category_id)}
-              onChange={() => onToggleCategory(category.category_id)}
-            />
-          ))
-        ) : (
-          <EmptyState>No categories</EmptyState>
-        )}
-      </Section>
+      <CategorySection
+        categories={categories}
+        categoryCounts={categoryCounts}
+        selectedCategories={selectedCategories}
+        isLoading={isLoadingCategories}
+        onToggleCategory={onToggleCategory}
+      />
     </SidebarContainer>
   );
 };
