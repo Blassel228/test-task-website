@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import React, { useMemo, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   useSearchProducts,
   useTopBrands,
@@ -11,9 +11,9 @@ import Row from "../Components/Row";
 import FacetsSidebar from "../Components/FacetsSidebar";
 import ProductsList from "../Components/ProductsList";
 import { Pagination } from "../Components/Pagination";
-import {ITEMS_PER_PAGE} from "../Constants/constants.tsx";
+import { ITEMS_PER_PAGE } from "../Constants/constants.tsx";
 import routers from "../Constants/routers.tsx";
-
+import { updateFilters, toggleFilterValue, handlePageChange } from "../utils/utils.tsx";
 
 const CatalogPage = () => {
   const navigate = useNavigate();
@@ -21,12 +21,12 @@ const CatalogPage = () => {
 
   const q = searchParams.get("q") || "";
 
-  if (!q){
+  if (!q) {
     navigate(routers.home);
   }
 
-  const brandIds = searchParams.get("brandIds")?.split(",").map(Number) || [];
-  const categoryIds = searchParams.get("categoryIds")?.split(",").map(Number) || [];
+  const brandIds = searchParams.get("brandIds")?.split(",").map(Number).filter(Boolean) || [];
+  const categoryIds = searchParams.get("categoryIds")?.split(",").map(Number).filter(Boolean) || [];
   const page = Number(searchParams.get("page") || 1);
   const offset = (page - 1) * ITEMS_PER_PAGE;
 
@@ -38,8 +38,8 @@ const CatalogPage = () => {
   const { topBrands, isLoading: areBrandsLoading } = useTopBrands(q);
   const { topCategories, isLoading: areCategoriesLoading } = useTopCategories(q);
 
-  const topBrandIds = useMemo(() => topBrands.map((b) => b.brand_id), [topBrands]);
-  const topCategoryIds = useMemo(() => topCategories.map((c) => c.category_id), [topCategories]);
+  const topBrandIds = useMemo(() => topBrands?.map((b) => b.brand_id) || [], [topBrands]);
+  const topCategoryIds = useMemo(() => topCategories?.map((c) => c.category_id) || [], [topCategories]);
 
   const brandCountsParams = useMemo(
     () => ({ q, brand_ids: topBrandIds, category_ids: categoryIds }),
@@ -61,37 +61,34 @@ const CatalogPage = () => {
   const isGlobalLoading = areProductsLoading;
   const isGlobalError = isProductsError;
 
-  const updateFilters = (newParams: Record<string, any>) => {
-    const params = new URLSearchParams(searchParams);
-    Object.entries(newParams).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        value.length > 0 ? params.set(key, value.join(",")) : params.delete(key);
-      } else if (value) {
-        params.set(key, String(value));
-      } else {
-        params.delete(key);
-      }
-    });
-    setSearchParams(params, { replace: true });
+  useEffect(() => {
+    if (areBrandsLoading || areCategoriesLoading) {
+      return;
+    }
+
+    const hasInvalidBrands = brandIds.length > 0 && brandIds.some((id) => !topBrandIds.includes(id));
+    const hasInvalidCategories = categoryIds.length > 0 && categoryIds.some((id) => !topCategoryIds.includes(id));
+
+    if (hasInvalidBrands || hasInvalidCategories) {
+      console.warn("Invalid brand or category IDs detected, redirecting to home");
+      navigate(routers.home);
+    }
+  }, [brandIds, categoryIds, topBrandIds, topCategoryIds, areBrandsLoading, areCategoriesLoading, navigate]);
+
+  const applyFilters = (newParams: Record<string, any>) => {
+    updateFilters(searchParams, setSearchParams, newParams);
   };
 
   const toggleBrand = (brandId: number) => {
-    const newBrands = brandIds.includes(brandId)
-      ? brandIds.filter((id) => id !== brandId)
-      : [...brandIds, brandId];
-    updateFilters({ brandIds: newBrands, page: 1 });
+    applyFilters({ brandIds: toggleFilterValue(brandIds, brandId), page: 1 });
   };
 
   const toggleCategory = (categoryId: number) => {
-    const newCategories = categoryIds.includes(categoryId)
-      ? categoryIds.filter((id) => id !== categoryId)
-      : [...categoryIds, categoryId];
-    updateFilters({ categoryIds: newCategories, page: 1 });
+    applyFilters({ categoryIds: toggleFilterValue(categoryIds, categoryId), page: 1 });
   };
 
-  const handlePageChange = (newPage: number) => {
-    updateFilters({ page: newPage });
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const onPageChange = (newPage: number) => {
+    handlePageChange(newPage, setSearchParams, searchParams);
   };
 
   return (
@@ -113,7 +110,7 @@ const CatalogPage = () => {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={handlePageChange}
+            onPageChange={onPageChange}
             totalItems={total}
             itemsPerPage={ITEMS_PER_PAGE}
           />
