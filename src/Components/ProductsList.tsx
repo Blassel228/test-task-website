@@ -22,6 +22,14 @@ const CatalogContainer = styled.div`
   background-color: #f7f7f7;
 `;
 
+const EmptyListContainer = styled.div`
+  display: flex;
+  justify-content: center;  
+  align-items: center;      
+  width: 100%;
+  height: 100%;
+`
+
 const ErrorElement = styled.div`
   padding: 20px;
   color: #dc2626;
@@ -34,7 +42,6 @@ const ErrorElement = styled.div`
 const EmptyElement = styled.div`
   padding: 20px;
   color: #64748b;
-  background: #f1f5f9;
   border-radius: 6px;
   text-align: center;
   grid-column: 1 / -1;
@@ -71,9 +78,9 @@ const ProductsList: React.FC<Props> = ({
 
   if (!products.length && !isLoading) {
     return (
-      <CatalogContainer>
+      <EmptyListContainer>
         <EmptyElement>No products found.</EmptyElement>
-      </CatalogContainer>
+      </EmptyListContainer>
     );
   }
 

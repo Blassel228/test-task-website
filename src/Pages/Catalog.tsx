@@ -89,7 +89,7 @@ const CatalogPage = () => {
 
       <div style={{ flex: 1 }}>
         <ProductsList products={products} isLoading={isGlobalLoading} isError={isGlobalError} />
-        {!isGlobalLoading && !isGlobalError && (
+        {!isGlobalLoading && !isGlobalError && products.length && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
