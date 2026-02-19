@@ -11,6 +11,7 @@ export interface SearchParamsRequest extends Partial<BaseSearchParams> {
 
 export interface GetCategoryCountsRequest extends BaseSearchParams {
   category_ids: number[];
+  selected_categories_with_counts: string;
 }
 
 export interface GetBrandCountsRequest extends BaseSearchParams {

@@ -30,10 +30,8 @@ const CatalogPage = () => {
   const page = Number(searchParams.get("page") || 1);
   const offset = (page - 1) * ITEMS_PER_PAGE;
 
-  const apiParams = useMemo(
-    () => ({ q, brand_ids: brandIds, category_ids: categoryIds, offset, limit: ITEMS_PER_PAGE }),
-    [q, brandIds, categoryIds, offset]
-  );
+  const apiParams = { q, brand_ids: brandIds, category_ids: categoryIds, offset, limit: ITEMS_PER_PAGE };
+
 
   const { topBrands, isLoading: areBrandsLoading } = useTopBrands(q);
   const { topCategories, isLoading: areCategoriesLoading } = useTopCategories(q);
@@ -41,15 +39,22 @@ const CatalogPage = () => {
   const topBrandIds = useMemo(() => topBrands?.map((b) => b.brand_id) || [], [topBrands]);
   const topCategoryIds = useMemo(() => topCategories?.map((c) => c.category_id) || [], [topCategories]);
 
-  const brandCountsParams = useMemo(
-    () => ({ q, brand_ids: topBrandIds, category_ids: categoryIds }),
-    [q, topBrandIds, categoryIds]
-  );
+  const brandCountsParams = ({ q, brand_ids: topBrandIds, category_ids: categoryIds }),
 
-  const categoryCountsParams = useMemo(
-    () => ({ q, brand_ids: brandIds, category_ids: topCategoryIds }),
-    [q, brandIds, topCategoryIds]
-  );
+   getSelectedCategoriesWithCounts = (): Record<number, number> => {
+      if (!topCategories || categoryIds.length === 0) return {};
+
+      return Object.fromEntries(
+        categoryIds.map((id) => {
+          const category = topCategories.find((c) => c.category_id === id);
+          return [id, category?.total || 0];
+        })
+      ) as Record<number, number>;
+    };
+
+  const selectedCategoriesWithCounts = getSelectedCategoriesWithCounts();
+
+  const categoryCountsParams = { q, brand_ids: brandIds, category_ids: topCategoryIds, selected_categories_with_counts: JSON.stringify(selectedCategoriesWithCounts) };
 
   const { products, isLoading: areProductsLoading, isError: isProductsError, total } = useSearchProducts(apiParams);
   const { categoryCounts, isLoading: categoryCountsLoading } = useGetCategoryCounts(categoryCountsParams, { enabled: topCategoryIds.length > 0 });
