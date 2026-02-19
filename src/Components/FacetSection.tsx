@@ -64,24 +64,10 @@ const EmptyState = styled.div`
   font-style: italic;
 `;
 
-const SkeletonItem = styled.div`
-  height: 24px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  border-radius: 4px;
-  animation: loading 1.5s infinite;
-
-  @keyframes loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-`;
-
 const FacetSection: React.FC<Props> = ({
   title,
   items,
   selectedIds,
-  isLoading = false,
   onToggle,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -96,9 +82,8 @@ const FacetSection: React.FC<Props> = ({
       </SectionHeader>
 
       <ItemsList isOpen={isOpen}>
-        {isLoading ? (
-          Array.from({ length: 5 }).map((_, i) => <SkeletonItem key={i} />)
-        ) : validItems.length > 0 ? (
+        {
+          validItems.length > 0 ? (
           validItems.map((item) => (
             <FacetCheckbox
               key={item.id}

@@ -18,16 +18,18 @@ export const BrandSection: React.FC<Props> = ({
   isLoading = false,
   onToggleBrand,
 }) => {
-  const items: FacetItem[] = useMemo(() => {
-    const countsMap = new Map(brandCounts.map((c) => [c.brand_id, c.count]));
-    return brands
-      .map((b) => ({
-        id: b.brand_id,
-        label: b.brand_name || "Unknown",
-        count: countsMap.get(b.brand_id) || 0,
-      }))
-      .filter((i) => i.label);
-  }, [brands, brandCounts]);
+
+  const countsMap = new Map(
+    brandCounts.map(c => [c.brand_id, c.count])
+  );
+
+  const items: FacetItem[] = brands
+    .map(b => ({
+      id: b.brand_id,
+      label: b.brand_name ?? "Unknown",
+      count: countsMap.get(b.brand_id) ?? 0,
+    }))
+    .filter(item => item.label);
 
   return (
     <FacetSection
