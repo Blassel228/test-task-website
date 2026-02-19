@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from "react";
+import { useMemo, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   useSearchProducts,
@@ -13,7 +13,7 @@ import ProductsList from "../Components/ProductsList";
 import { Pagination } from "../Components/Pagination";
 import { ITEMS_PER_PAGE } from "../Constants/constants.tsx";
 import routers from "../Constants/routers.tsx";
-import { updateFilters, toggleFilterValue, handlePageChange } from "../utils/utils.tsx";
+import { updateFilters, toggleFilterValue, handlePageChange } from "../Utils/utils.tsx";
 
 const CatalogPage = () => {
   const navigate = useNavigate();

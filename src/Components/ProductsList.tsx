@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import ProductCard from "./ProductCard";
 import Loading from "./Loading";
+import {Product} from "../Types/Product.tsx";
 
 const LoadingContainer = styled.div`
   display: flex;
@@ -40,7 +41,7 @@ const EmptyElement = styled.div`
 `;
 
 interface Props {
-  products: Array<{ id: number }>;
+  products: Product[];
   isLoading: boolean;
   isError: boolean;
 }

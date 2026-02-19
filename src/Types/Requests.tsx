@@ -5,8 +5,8 @@ export interface BaseSearchParams {
 }
 
 export interface SearchParamsRequest extends Partial<BaseSearchParams> {
-  offset: number;
-  limit: number;
+  offset?: number;
+  limit?: number;
 }
 
 export interface GetCategoryCountsRequest extends BaseSearchParams {

@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import amazonLogo from "../Assets/amazonLogo.png";
 import SearchBar from "./SearchForm.tsx";

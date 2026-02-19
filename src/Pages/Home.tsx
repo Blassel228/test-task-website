@@ -1,6 +1,4 @@
-import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import background from "../Assets/ripples-of-sand-in-black-and-white.jpg";
 
 const Container = styled.div`
@@ -98,8 +96,6 @@ const GlobalStyles = styled.div`
 `;
 
 const HomePage = () => {
-  const navigate = useNavigate();
-
   return (
     <Container>
       <GlobalStyles />

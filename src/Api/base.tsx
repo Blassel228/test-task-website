@@ -14,7 +14,12 @@ const baseApi: AxiosInstance = axios.create({
 });
 
 baseApi.interceptors.request.use(config => {
-  console.log("➡️", config.method?.toUpperCase(), config.baseURL + config.url, config.params || "");
+  console.log(
+    "➡️",
+    config?.method?.toUpperCase(),
+    (config?.baseURL ?? '') + (config?.url ?? ''),
+    config?.params || ""
+  );
   return config;
 });
 

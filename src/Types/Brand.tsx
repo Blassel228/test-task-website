@@ -6,7 +6,7 @@ export interface Brand {
 export interface TopBrand {
   total: number;
   brand_id: number;
-  brand_name: number;
+  brand_name: string;
 }
 
 export interface BrandCount{
