@@ -41,19 +41,15 @@ const SectionTitle = styled.h3`
 `;
 
 
-const ToggleIcon = styled.span.withConfig({
-  shouldForwardProp: (prop) => prop !== "isOpen",
-})<{ isOpen: boolean }>`
+const ToggleIcon = styled.span<{ $isOpen: boolean }>`
   font-size: 1.2rem;
   color: #666;
-  transform: rotate(${({ isOpen }) => (isOpen ? "180deg" : "0deg")});
+  transform: rotate(${({ $isOpen }) => ($isOpen ? "180deg" : "0deg")});
   transition: transform 0.2s ease;
 `;
 
-const ItemsList = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "isOpen",
-})<{ isOpen: boolean }>`
-  display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
+const ItemsList = styled.div<{ $isOpen: boolean }>`
+  display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
   flex-direction: column;
   gap: 8px;
 `;
@@ -76,10 +72,10 @@ const FacetSection: React.FC<Props> = ({
     <Section>
       <SectionHeader onClick={() => setIsOpen(!isOpen)} role="button" tabIndex={0}>
         <SectionTitle>{title}</SectionTitle>
-        <ToggleIcon isOpen={isOpen}>▼</ToggleIcon>
+        <ToggleIcon $isOpen={isOpen}>▼</ToggleIcon>
       </SectionHeader>
 
-      <ItemsList isOpen={isOpen}>
+      <ItemsList $isOpen={isOpen}>
         {
           items.length > 0 ? (
           items.map((item) => (
