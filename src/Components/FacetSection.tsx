@@ -40,6 +40,7 @@ const SectionTitle = styled.h3`
   flex-grow: 1;
 `;
 
+
 const ToggleIcon = styled.span.withConfig({
   shouldForwardProp: (prop) => prop !== "isOpen",
 })<{ isOpen: boolean }>`
@@ -71,9 +72,6 @@ const FacetSection: React.FC<Props> = ({
   onToggle,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
-
-  const validItems = items.filter((item) => item.label && item.label.trim() !== "");
-
   return (
     <Section>
       <SectionHeader onClick={() => setIsOpen(!isOpen)} role="button" tabIndex={0}>
@@ -83,8 +81,8 @@ const FacetSection: React.FC<Props> = ({
 
       <ItemsList isOpen={isOpen}>
         {
-          validItems.length > 0 ? (
-          validItems.map((item) => (
+          items.length > 0 ? (
+          items.map((item) => (
             <FacetCheckbox
               key={item.id}
               label={item.label}

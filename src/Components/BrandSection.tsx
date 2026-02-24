@@ -29,7 +29,6 @@ export const BrandSection: React.FC<Props> = ({
       label: b.brand_name ?? "Unknown",
       count: countsMap.get(b.brand_id) ?? 0,
     }))
-    .filter(item => item.label);
 
   return (
     <FacetSection
