@@ -15,11 +15,9 @@ const HeroSection = styled.section`
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 100%),
-    url(${background});
+  background: url(${background});
   background-size: cover;
   background-position: center;
-  background-attachment: fixed; 
   padding: 20px;
 `;
 
@@ -37,11 +35,6 @@ const HeroTitle = styled.h1`
   letter-spacing: -2px;
   line-height: 1.1;
   text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-    letter-spacing: -1px;
-  }
 `;
 
 const HeroSubtitle = styled.p`
@@ -51,10 +44,6 @@ const HeroSubtitle = styled.p`
   line-height: 1.6;
   font-weight: 300;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-
-  @media (max-width: 768px) {
-    font-size: 1.1rem;
-  }
 `;
 
 const CTAButton = styled.button`
@@ -82,23 +71,9 @@ const CTAButton = styled.button`
   }
 `;
 
-const GlobalStyles = styled.div`
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-`;
-
 const HomePage = () => {
   return (
     <Container>
-      <GlobalStyles />
       <HeroSection>
         <HeroContent>
           <HeroTitle>Style & Quality</HeroTitle>

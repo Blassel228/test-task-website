@@ -30,14 +30,6 @@ const SidebarContainer = styled.aside`
   position: sticky;
   top: 60px;
   flex-shrink: 0;
-
-  @media (max-width: 768px) {
-    position: static;
-    height: auto;
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #eee;
-  }
 `;
 
 const FacetsSidebar: React.FC<Props> = ({

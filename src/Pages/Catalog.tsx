@@ -56,10 +56,6 @@ const CatalogPage = () => {
   const isGlobalError = isProductsError;
 
   useEffect(() => {
-    if (areBrandsLoading || areCategoriesLoading) {
-      return;
-    }
-
     const hasInvalidBrands = brandIds.length > 0 && brandIds.some((id) => !topBrandIds.includes(id));
     const hasInvalidCategories = categoryIds.length > 0 && categoryIds.some((id) => !topCategoryIds.includes(id));
 
@@ -68,11 +64,6 @@ const CatalogPage = () => {
       navigate(routers.home);
     }
   }, [brandIds, categoryIds, topBrandIds, topCategoryIds, areBrandsLoading, areCategoriesLoading, navigate]);
-
-  const applyFilters = (newParams: Record<string, any>) => {
-    updateFilters(searchParams, setSearchParams, newParams);
-  };
-
 
   return (
     <Row>
@@ -83,8 +74,8 @@ const CatalogPage = () => {
         categoryCounts={categoryCounts}
         selectedBrands={brandIds}
         selectedCategories={categoryIds}
-         onToggleBrand={(brandId) => applyFilters({ brandIds: toggleFilterValue(brandIds, brandId), page: 1 })}
-        onToggleCategory={(categoryId) => applyFilters({ categoryIds: toggleFilterValue(categoryIds, categoryId), page: 1 })}
+         onToggleBrand={(brandId) => updateFilters(searchParams, setSearchParams,{ brandIds: toggleFilterValue(brandIds, brandId), page: 1 })}
+        onToggleCategory={(categoryId) => updateFilters(searchParams, setSearchParams,{ categoryIds: toggleFilterValue(categoryIds, categoryId), page: 1 })}
       />
 
       <div style={{ flex: 1 }}>

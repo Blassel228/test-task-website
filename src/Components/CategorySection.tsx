@@ -21,14 +21,12 @@ export const CategorySection: React.FC<Props> = ({
   const countsMap = new Map(
     categoryCounts.map((c) => [c.category_id, c.count])
   );
-
   const items: FacetItem[] = categories
     .map((c) => ({
       id: c.category_id,
       label: c.category_name || "Unknown",
       count: countsMap.get(c.category_id) || 0,
     }))
-    .filter((i) => i.label);
 
   return (
     <FacetSection
